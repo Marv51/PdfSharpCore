@@ -99,5 +99,26 @@ namespace PdfSharpCore.Test
             }
         }
 
+        [Fact]
+        public void CreatePDFAndOpenAgain()
+        {
+            using (var stream = new MemoryStream())
+            {
+                var document = new PdfDocument();
+
+                PdfPage pageNewRenderer = document.AddPage();
+
+                var renderer = XGraphics.FromPdfPage(pageNewRenderer);
+
+                renderer.DrawString("Testy Test Test", new XFont("Arial", 12), XBrushes.Black, new XPoint(12, 12));
+
+                document.Save(stream);
+                stream.Position = 0;
+
+                var doc2 = PdfSharpCore.Pdf.IO.PdfReader.Open(stream);
+                Assert.Equal(1, doc2.PageCount);
+            }
+        }
+
     }
 }
